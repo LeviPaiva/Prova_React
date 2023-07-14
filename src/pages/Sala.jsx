@@ -1,0 +1,165 @@
+import React, { useState, useEffect } from 'react';
+import './TabelaEditavel.css';
+
+function TabelaEditavel() {
+  const [dados, setDados] = useState([
+    { id: 1, sala: 'Sala A', curso: 'Curso 1', periodo: 'Manhã', editavel: false, salaOriginal: '', cursoOriginal: '', periodoOriginal: '' },
+    { id: 2, sala: 'Sala B', curso: 'Curso 2', periodo: 'Tarde', editavel: false, salaOriginal: '', cursoOriginal: '', periodoOriginal: '' },
+    { id: 3, sala: 'Sala C', curso: 'Curso 3', periodo: 'Noite', editavel: false, salaOriginal: '', cursoOriginal: '', periodoOriginal: '' },
+  ]);
+
+  useEffect(() => {
+    const dadosArmazenados = localStorage.getItem('Storage_sala');
+    if (dadosArmazenados) {
+      setDados(JSON.parse(dadosArmazenados));
+    }
+  }, []);
+
+  const handleChange = (id, campo, valor) => {
+    const novosDados = dados.map(item => {
+      if (item.id === id) {
+        return { ...item, [campo]: valor };
+      }
+      return item;
+    });
+    setDados(novosDados);
+  };
+
+  const handleEdit = (id) => {
+    const novosDados = dados.map(item => {
+      if (item.id === id) {
+        return { ...item, editavel: true, salaOriginal: item.sala, cursoOriginal: item.curso, periodoOriginal: item.periodo };
+      }
+      return item;
+    });
+    setDados(novosDados);
+  };
+
+  const handleSave = (id) => {
+    const novosDados = dados.map(item => {
+      if (item.id === id) {
+        return { ...item, editavel: false };
+      }
+      return item;
+    });
+    setDados(novosDados);
+    salvarDadosNoStorage(novosDados);
+  };
+
+  const handleCancel = (id) => {
+    const novosDados = dados.map(item => {
+      if (item.id === id) {
+        return { ...item, editavel: false, sala: item.salaOriginal, curso: item.cursoOriginal, periodo: item.periodoOriginal };
+      }
+      return item;
+    });
+    setDados(novosDados);
+  };
+
+  const handleDelete = (id) => {
+    const novosDados = dados.filter(item => item.id !== id);
+    setDados(novosDados);
+    excluirDoStorage(id);
+  };
+
+  const handleAdd = () => {
+    const novoId = dados.length + 1;
+    const novaLinha = {
+      id: novoId,
+      sala: '',
+      curso: '',
+      periodo: '',
+      editavel: true,
+      salaOriginal: '',
+      cursoOriginal: '',
+      periodoOriginal: ''
+    };
+    const novosDados = [...dados, novaLinha];
+    setDados(novosDados);
+  };
+
+  const salvarDadosNoStorage = (dados) => {
+    localStorage.setItem('Storage_sala', JSON.stringify(dados));
+  };
+
+  const excluirDoStorage = (id) => {
+    const dadosArmazenados = localStorage.getItem('Storage_sala');
+    if (dadosArmazenados) {
+      const dadosAtualizados = JSON.parse(dadosArmazenados).filter(item => item.id !== id);
+      localStorage.setItem('Storage_sala', JSON.stringify(dadosAtualizados));
+    }
+  };
+
+  return (
+    <div>
+      <h1>Salas</h1>
+      <button onClick={handleAdd} className="adicionar-linha">Adicionar Linha</button>
+      <table className="tabela-editavel">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Sala</th>
+            <th>Curso</th>
+            <th>Período</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dados.map(item => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>
+                {item.editavel ? (
+                  <input
+                    type="text"
+                    value={item.sala}
+                    onChange={e => handleChange(item.id, 'sala', e.target.value)}
+                  />
+                ) : (
+                  item.sala
+                )}
+              </td>
+              <td>
+                {item.editavel ? (
+                  <input
+                    type="text"
+                    value={item.curso}
+                    onChange={e => handleChange(item.id, 'curso', e.target.value)}
+                  />
+                ) : (
+                  item.curso
+                )}
+              </td>
+              <td>
+                {item.editavel ? (
+                  <input
+                    type="text"
+                    value={item.periodo}
+                    onChange={e => handleChange(item.id, 'periodo', e.target.value)}
+                  />
+                ) : (
+                  item.periodo
+                )}
+              </td>
+              <td>
+                {item.editavel ? (
+                  <div className="acoes">
+                    <button onClick={() => handleSave(item.id)}>Salvar</button>
+                    <button onClick={() => handleCancel(item.id)}>Cancelar Edição</button>
+                  </div>
+                ) : (
+                  <div className="acoes">
+                    <button onClick={() => handleEdit(item.id)}>Editar</button>
+                    <button onClick={() => handleDelete(item.id)}>Excluir</button>
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default TabelaEditavel;

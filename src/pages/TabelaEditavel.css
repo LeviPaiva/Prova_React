@@ -1,0 +1,71 @@
+.tabela-editavel {
+    width: 100%;
+    /* border-collapse: collapse; */
+    margin-bottom: 20px;
+    /* border-radius: 10px; */
+    overflow: hidden;
+  }
+  
+  .tabela-editavel th,
+  .tabela-editavel td {
+    /* border: 1px solid #ccc; */
+    padding: 8px;
+  }
+  
+  .tabela-editavel th {
+    background-color: #87CEFA;
+    color: black;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+  
+  .tabela-editavel input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .adicionar-linha {
+    margin-bottom: 10px;
+    background-color: #87CEFA;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .adicionar-linha:hover {
+    background-color: #7AB8E0;
+  }
+  
+  .tabela-editavel .acoes button {
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+  }
+  
+  .tabela-editavel .acoes button.salvar {
+    background-color: green;
+    color: white;
+  }
+  
+  .tabela-editavel .acoes button.cancelar {
+    background-color: red;
+    color: white;
+  }
+  
+  .tabela-editavel .acoes button:hover {
+    background-color: #7AB8E0;
+  }
+  
